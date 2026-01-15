@@ -1,0 +1,31 @@
+# Video Optimization Pipeline Configuration
+
+# Input/Output paths
+input_dir: "./input_videos"
+output_dir: "./output_videos"
+
+# Model configuration
+model:
+  name: "nafnet"  # NAFNet - efficient deblurring model
+  checkpoint: null  # Path to pretrained weights, or null to use default
+  
+# Processing configuration
+processing:
+  batch_size: 4  # Number of frames to process at once (adjust for VRAM)
+  tile_size: 512  # Process video in tiles to save VRAM (null for full frame)
+  tile_overlap: 32  # Overlap between tiles to avoid artifacts
+  max_resolution: [1920, 1080]  # Maximum resolution to process (downscale if larger)
+  
+# GPU configuration
+gpu:
+  device: "cuda:0"  # CUDA device to use
+  fp16: true  # Use half precision for lower VRAM usage
+  max_vram_gb: 16  # Maximum VRAM in GB
+  
+# Video encoding settings
+output:
+  codec: "mp4v"  # Video codec fourcc (mp4v, avc1, XVID, etc.)
+  crf: 18  # Quality (0-51, lower = better quality)
+  preset: "slow"  # Encoding speed vs compression (ultrafast, fast, medium, slow, veryslow)
+  pixel_format: "yuv420p"
+  filename_prefix: "deblurred_"  # Prefix for output filenames
