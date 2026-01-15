@@ -25,12 +25,12 @@ WEIGHTS_INFO = {
 }
 
 
-def download_file(url, filename, description):
+def download_file(url, filename, description, size_mb):
     """Download a file with progress bar."""
     print(f"\nDownloading: {description}")
     print(f"URL: {url}")
     print(f"Saving to: {filename}")
-    print(f"Size: ~{WEIGHTS_INFO[list(WEIGHTS_INFO.keys())[0]]['size_mb']} MB (estimated)")
+    print(f"Size: ~{size_mb} MB (estimated)")
     
     def report_progress(block_num, block_size, total_size):
         downloaded = block_num * block_size
@@ -97,7 +97,8 @@ def main():
     success = download_file(
         model_info['url'],
         model_info['filename'],
-        model_info['description']
+        model_info['description'],
+        model_info['size_mb']
     )
     
     if success:

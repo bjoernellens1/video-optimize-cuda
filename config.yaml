@@ -24,7 +24,8 @@ gpu:
   
 # Video encoding settings
 output:
-  codec: "libx264"
+  codec: "mp4v"  # Video codec fourcc (mp4v, avc1, XVID, etc.)
   crf: 18  # Quality (0-51, lower = better quality)
   preset: "slow"  # Encoding speed vs compression (ultrafast, fast, medium, slow, veryslow)
   pixel_format: "yuv420p"
+  filename_prefix: "deblurred_"  # Prefix for output filenames

@@ -25,7 +25,7 @@ class LayerNormFunction(torch.autograd.Function):
     def backward(ctx, grad_output):
         eps = ctx.eps
         N, C, H, W = grad_output.size()
-        y, var, weight = ctx.saved_variables
+        y, var, weight = ctx.saved_tensors
         g = grad_output * weight.view(1, C, 1, 1)
         mean_g = g.mean(dim=1, keepdim=True)
         mean_gy = (g * y).mean(dim=1, keepdim=True)

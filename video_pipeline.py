@@ -87,7 +87,8 @@ class VideoDeblurPipeline:
                 'codec': 'mp4v',
                 'crf': 18,
                 'preset': 'slow',
-                'pixel_format': 'yuv420p'
+                'pixel_format': 'yuv420p',
+                'filename_prefix': 'deblurred_'
             }
         }
     
@@ -141,6 +142,7 @@ class VideoDeblurPipeline:
         """
         # Resize if needed
         max_res = self.config['processing'].get('max_resolution')
+        original_size = None
         if max_res:
             frame, original_size = resize_if_needed(frame, tuple(max_res))
         
@@ -162,6 +164,11 @@ class VideoDeblurPipeline:
         
         # Postprocess
         output_frame = postprocess_frame(output_tensor)
+        
+        # Resize back to original size if needed
+        if original_size and original_size != (output_frame.shape[1], output_frame.shape[0]):
+            import cv2
+            output_frame = cv2.resize(output_frame, original_size, interpolation=cv2.INTER_LANCZOS4)
         
         return output_frame
     
@@ -252,8 +259,9 @@ class VideoDeblurPipeline:
         logger.info(f"Found {len(video_files)} video(s) to process")
         
         # Process each video
+        filename_prefix = self.config['output'].get('filename_prefix', 'deblurred_')
         for video_path in video_files:
-            output_path = Path(self.config['output_dir']) / f"deblurred_{video_path.name}"
+            output_path = Path(self.config['output_dir']) / f"{filename_prefix}{video_path.name}"
             
             try:
                 self.process_video(video_path, output_path)
